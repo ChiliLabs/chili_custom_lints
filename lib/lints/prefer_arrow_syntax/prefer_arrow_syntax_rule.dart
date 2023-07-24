@@ -9,7 +9,7 @@ class PreferArrowSyntaxRule extends DartLintRule {
 
   static final _code = LintCode(
     name: 'prefer_arrow_syntax',
-    problemMessage: 'Prefer arrow syntax for single line functions',
+    problemMessage: '⚠️ Warning: this lint is under construction and is experimental. ⚠️ Prefer arrow syntax for single line functions',
     correctionMessage:
         'Replace with arrow syntax, e.g. from void foo() { return 1; } to void foo() => 1;',
   );
