@@ -1,0 +1,4 @@
+enum EdgeInsetsParameter {
+  horizontal,
+  vertical,
+}
