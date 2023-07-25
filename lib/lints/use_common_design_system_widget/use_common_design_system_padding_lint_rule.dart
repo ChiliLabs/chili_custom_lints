@@ -1,18 +1,19 @@
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
-import 'package:chili_custom_lints/constants/lint_rule_constants.dart';
-import 'package:chili_custom_lints/node_handler/widget_node_handler.dart';
-import 'package:chili_custom_lints/widget_helper/src/design_system/model/design_system_element.dart';
-import 'package:chili_custom_lints/widget_helper/src/design_system/spacing/common_design_system_spacing.dart';
-import 'package:chili_custom_lints/widget_helper/src/material/edge_insets/model/edge_insets_type.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/model/common_design_system_widget.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/node_handler/widget_node_handler.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/utils/extension/common_design_system_widget_extension.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/design_system/model/design_system_element.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/design_system/spacing/common_design_system_spacing.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/material/edge_insets/model/edge_insets_type.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 class UseCommonDesignSystemPaddingLintRule extends DartLintRule {
   UseCommonDesignSystemPaddingLintRule() : super(code: _code);
 
-  static const _code = LintCode(
-    name: LintRuleConstants.paddingErrorCode,
-    problemMessage: LintRuleConstants.problemMessage,
+  static final _code = LintCode(
+    name: CommonDesignSystemWidget.padding.errorCode,
+    problemMessage: CommonDesignSystemWidget.padding.problemMessage,
     errorSeverity: ErrorSeverity.WARNING,
   );
 
@@ -23,10 +24,10 @@ class UseCommonDesignSystemPaddingLintRule extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
-      final instanceName = node.constructorName.toString();
       final arguments = node.argumentList.arguments;
       if (arguments.length > 1) return;
 
+      final instanceName = node.constructorName.toString();
       final paddingMethod = EdgeInsetsType.fromRawValue(instanceName);
       if (!EdgeInsetsType.validMethods.contains(paddingMethod)) return;
 
@@ -57,13 +58,20 @@ class _UseCommonDesignSystemPaddingLintRuleFix extends DartFix {
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final arguments = node.argumentList.arguments;
-      if (node.argumentList.arguments.length > 1) return;
+      final isMatch = arguments.length <= 1;
+      final isHighlighted = analysisError.sourceRange.intersects(
+        node.sourceRange,
+      );
 
-      if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
+      if (!isMatch || !isHighlighted) return;
 
       final (horizontal, vertical) = WidgetNodeHandler.getPaddingArgumentValues(
         node,
       );
+
+      if (!WidgetNodeHandler.hasLintError(horizontal, vertical, arguments)) {
+        return;
+      }
 
       final isAllPadding = horizontal == vertical;
 
@@ -79,10 +87,6 @@ class _UseCommonDesignSystemPaddingLintRuleFix extends DartFix {
         correctionValue,
         DesignSystemElement.padding,
       );
-
-      if (!WidgetNodeHandler.hasLintError(horizontal, vertical, arguments)) {
-        return;
-      }
 
       final changeBuilder = reporter.createChangeBuilder(
         message: WidgetNodeHandler.getCorrectionMessage(correctionName),

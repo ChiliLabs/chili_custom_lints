@@ -1,16 +1,17 @@
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
-import 'package:chili_custom_lints/constants/lint_rule_constants.dart';
-import 'package:chili_custom_lints/node_handler/widget_node_handler.dart';
-import 'package:chili_custom_lints/widget_helper/src/material/edge_insets/model/edge_insets_type.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/model/common_design_system_widget.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/node_handler/widget_node_handler.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/utils/extension/common_design_system_widget_extension.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/material/edge_insets/model/edge_insets_type.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 class UseCommonDesignSystemEmptyPaddingLintRule extends DartLintRule {
   UseCommonDesignSystemEmptyPaddingLintRule() : super(code: _code);
 
-  static const _code = LintCode(
-    name: LintRuleConstants.emptyPaddingErrorCode,
-    problemMessage: LintRuleConstants.problemMessage,
+  static final _code = LintCode(
+    name: CommonDesignSystemWidget.emptyPadding.errorCode,
+    problemMessage: CommonDesignSystemWidget.emptyPadding.problemMessage,
     errorSeverity: ErrorSeverity.WARNING,
   );
 
@@ -41,9 +42,15 @@ class _UseCommonDesignSystemEmptyPaddingLintRuleFix extends DartFix {
     List<AnalysisError> others,
   ) {
     context.registry.addIdentifier((node) {
-      if (node.name != EdgeInsetsType.zero.name) return;
+      final isMatch = node.name == EdgeInsetsType.zero.name;
+      final isHighlighted = analysisError.sourceRange.intersects(
+        node.sourceRange,
+      );
 
-      final correctionName = LintRuleConstants.emptyPaddingCorrectionName;
+      if (!isMatch || !isHighlighted) return;
+
+      final correctionName =
+          CommonDesignSystemWidget.emptyPadding.correctionName;
       final changeBuilder = reporter.createChangeBuilder(
         message: WidgetNodeHandler.getCorrectionMessage(correctionName),
         priority: 1,

@@ -1,17 +1,18 @@
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
-import 'package:chili_custom_lints/constants/lint_rule_constants.dart';
-import 'package:chili_custom_lints/node_handler/widget_node_handler.dart';
-import 'package:chili_custom_lints/widget_helper/src/design_system/model/design_system_element.dart';
-import 'package:chili_custom_lints/widget_helper/src/design_system/spacing/common_design_system_spacing.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/model/common_design_system_widget.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/node_handler/widget_node_handler.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/utils/extension/common_design_system_widget_extension.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/design_system/model/design_system_element.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/design_system/spacing/common_design_system_spacing.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 class UseCommonDesignSystemMarginLintRule extends DartLintRule {
   UseCommonDesignSystemMarginLintRule() : super(code: _code);
 
-  static const _code = LintCode(
-    name: LintRuleConstants.marginErrorCode,
-    problemMessage: LintRuleConstants.problemMessage,
+  static final _code = LintCode(
+    name: CommonDesignSystemWidget.margin.errorCode,
+    problemMessage: CommonDesignSystemWidget.margin.problemMessage,
     errorSeverity: ErrorSeverity.WARNING,
   );
 
@@ -26,7 +27,9 @@ class UseCommonDesignSystemMarginLintRule extends DartLintRule {
       if (arguments.length > 1) return;
 
       final instanceName = node.constructorName.toString();
-      if (instanceName != LintRuleConstants.sizedBoxInstanceName) return;
+      if (instanceName != CommonDesignSystemWidget.sizedBox.instanceName) {
+        return;
+      }
 
       final (width, height) = WidgetNodeHandler.getMarginArgumentValues(node);
 
@@ -51,11 +54,16 @@ class _UseCommonDesignSystemMarginLintRuleFix extends DartFix {
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final arguments = node.argumentList.arguments;
-      if (node.argumentList.arguments.length > 1) return;
+      final isMatch = arguments.length <= 1;
+      final isHighlighted = analysisError.sourceRange.intersects(
+        node.sourceRange,
+      );
 
-      if (!analysisError.sourceRange.intersects(node.sourceRange)) return;
+      if (!isMatch || !isHighlighted) return;
 
       final (width, height) = WidgetNodeHandler.getMarginArgumentValues(node);
+
+      if (!WidgetNodeHandler.hasLintError(width, height, arguments)) return;
 
       final correctionValue = width ?? height;
       final correctionPrefix = width != null
@@ -66,14 +74,12 @@ class _UseCommonDesignSystemMarginLintRuleFix extends DartFix {
 
       final isEmptyWidget = correctionPrefix == CommonDesignSystemSpacing.empty;
       final correctionName = isEmptyWidget
-          ? LintRuleConstants.emptyWidgetCorrectionName
+          ? CommonDesignSystemWidget.emptyWidget.correctionName
           : WidgetNodeHandler.getCorrectionName(
               correctionPrefix.name,
               correctionValue,
               DesignSystemElement.margin,
             );
-
-      if (!WidgetNodeHandler.hasLintError(width, height, arguments)) return;
 
       final changeBuilder = reporter.createChangeBuilder(
         message: WidgetNodeHandler.getCorrectionMessage(correctionName),

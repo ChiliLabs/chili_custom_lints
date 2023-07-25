@@ -1,4 +1,4 @@
-import 'package:chili_custom_lints/widget_helper/src/material/edge_insets/model/edge_insets_parameter.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/material/edge_insets/model/edge_insets_parameter.dart';
 
 extension EdgeInsetsParameterExtension on EdgeInsetsParameter {
   int get valueStartPosition {

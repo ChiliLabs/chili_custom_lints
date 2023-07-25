@@ -1,10 +1,10 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:chili_custom_lints/utils/extension/edge_insets_parameter_extension.dart';
-import 'package:chili_custom_lints/utils/extension/sized_box_parameter_extension.dart';
-import 'package:chili_custom_lints/widget_helper/src/design_system/model/design_system_element.dart';
-import 'package:chili_custom_lints/widget_helper/src/material/edge_insets/model/edge_insets_parameter.dart';
-import 'package:chili_custom_lints/widget_helper/src/material/sized_box/model/sized_box_parameter.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/utils/extension/edge_insets_parameter_extension.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/utils/extension/sized_box_parameter_extension.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/widget_helper.dart';
 import 'package:collection/collection.dart';
+
+typedef DirectionalSpacing = (double? horizontal, double? vertical);
 
 class WidgetNodeHandler {
   static String getCorrectionName(
@@ -29,7 +29,7 @@ class WidgetNodeHandler {
     return isHorizontalDivisibleBy4 || isVerticalDivisibleBy4 || !hasArguments;
   }
 
-  static (double? width, double? height) getMarginArgumentValues(
+  static DirectionalSpacing getMarginArgumentValues(
     InstanceCreationExpression node,
   ) {
     final width = _getArgumentValue(
@@ -47,7 +47,7 @@ class WidgetNodeHandler {
     return (width, height);
   }
 
-  static (double? horizontal, double? vertical) getPaddingArgumentValues(
+  static DirectionalSpacing getPaddingArgumentValues(
     InstanceCreationExpression node,
   ) {
     final horizontal = _getArgumentValue(

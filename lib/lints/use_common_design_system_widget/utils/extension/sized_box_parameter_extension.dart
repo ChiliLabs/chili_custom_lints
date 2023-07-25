@@ -1,4 +1,4 @@
-import 'package:chili_custom_lints/widget_helper/src/material/sized_box/model/sized_box_parameter.dart';
+import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/material/sized_box/model/sized_box_parameter.dart';
 
 extension SizedBoxParameterExtension on SizedBoxParameter {
   int get valueStartPosition {
