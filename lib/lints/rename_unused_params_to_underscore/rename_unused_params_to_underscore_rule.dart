@@ -18,6 +18,7 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 ///  itemBuilder: (_, __) {
 ///  return Text('Hello');
 ///  });
+///  ```
 class RenameUnusedParamsToUnderscoreRule extends DartLintRule {
   RenameUnusedParamsToUnderscoreRule() : super(code: _code);
 
