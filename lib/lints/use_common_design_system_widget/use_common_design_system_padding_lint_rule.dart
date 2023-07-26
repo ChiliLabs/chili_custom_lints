@@ -58,11 +58,11 @@ class _UseCommonDesignSystemPaddingLintRuleFix extends DartFix {
     context.registry.addInstanceCreationExpression((node) {
       final arguments = node.argumentList.arguments;
       final isMatch = arguments.length <= 1;
+      if (!isMatch) return;
+
       final isHighlighted = analysisError.sourceRange.intersects(
         node.sourceRange,
       );
-
-      if (!isMatch) return;
       if (!isHighlighted) return;
 
       final (horizontal, vertical) = WidgetNodeHandler.getPaddingArgumentValues(

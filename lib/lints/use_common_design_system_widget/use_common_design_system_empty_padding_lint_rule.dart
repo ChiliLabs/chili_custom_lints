@@ -42,11 +42,11 @@ class _UseCommonDesignSystemEmptyPaddingLintRuleFix extends DartFix {
   ) {
     context.registry.addIdentifier((node) {
       final isMatch = node.name == EdgeInsetsType.zero.name;
+      if (!isMatch) return;
+
       final isHighlighted = analysisError.sourceRange.intersects(
         node.sourceRange,
       );
-
-      if (!isMatch) return;
       if (!isHighlighted) return;
 
       final correctionName =
