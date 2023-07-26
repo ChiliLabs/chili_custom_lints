@@ -1,6 +1,4 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:chili_custom_lints/lints/use_common_design_system_widget/utils/extension/edge_insets_parameter_extension.dart';
-import 'package:chili_custom_lints/lints/use_common_design_system_widget/utils/extension/sized_box_parameter_extension.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/widget_helper.dart';
 import 'package:collection/collection.dart';
 

@@ -2,7 +2,6 @@ import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/model/common_design_system_widget.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/node_handler/widget_node_handler.dart';
-import 'package:chili_custom_lints/lints/use_common_design_system_widget/utils/extension/common_design_system_widget_extension.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/design_system/model/design_system_element.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/design_system/spacing/common_design_system_spacing.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/widget_helper/src/material/edge_insets/model/edge_insets_type.dart';
@@ -63,7 +62,8 @@ class _UseCommonDesignSystemPaddingLintRuleFix extends DartFix {
         node.sourceRange,
       );
 
-      if (!isMatch || !isHighlighted) return;
+      if (!isMatch) return;
+      if (!isHighlighted) return;
 
       final (horizontal, vertical) = WidgetNodeHandler.getPaddingArgumentValues(
         node,
