@@ -33,8 +33,9 @@ class UseCommonDesignSystemPaddingLintRule extends DartLintRule {
       final (horizontal, vertical) = WidgetNodeHandler.getPaddingArgumentValues(
         node,
       );
+      final hasArguments = arguments.isNotEmpty;
 
-      if (!WidgetNodeHandler.hasLintError(horizontal, vertical, arguments)) {
+      if (!WidgetNodeHandler.hasLintError(horizontal, vertical, hasArguments)) {
         return;
       }
 
@@ -68,8 +69,9 @@ class _UseCommonDesignSystemPaddingLintRuleFix extends DartFix {
       final (horizontal, vertical) = WidgetNodeHandler.getPaddingArgumentValues(
         node,
       );
+      final hasArguments = arguments.isNotEmpty;
 
-      if (!WidgetNodeHandler.hasLintError(horizontal, vertical, arguments)) {
+      if (!WidgetNodeHandler.hasLintError(horizontal, vertical, hasArguments)) {
         return;
       }
 

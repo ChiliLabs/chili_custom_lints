@@ -31,8 +31,9 @@ class UseCommonDesignSystemMarginLintRule extends DartLintRule {
       }
 
       final (width, height) = WidgetNodeHandler.getMarginArgumentValues(node);
+      final hasArguments = arguments.isNotEmpty;
 
-      if (!WidgetNodeHandler.hasLintError(width, height, arguments)) return;
+      if (!WidgetNodeHandler.hasLintError(width, height, hasArguments)) return;
 
       reporter.reportErrorForOffset(code, node.offset, node.length);
     });
@@ -62,8 +63,9 @@ class _UseCommonDesignSystemMarginLintRuleFix extends DartFix {
       if (!isHighlighted) return;
 
       final (width, height) = WidgetNodeHandler.getMarginArgumentValues(node);
+      final hasArguments = arguments.isNotEmpty;
 
-      if (!WidgetNodeHandler.hasLintError(width, height, arguments)) return;
+      if (!WidgetNodeHandler.hasLintError(width, height, hasArguments)) return;
 
       final correctionValue = width ?? height;
       final correctionPrefix = width != null

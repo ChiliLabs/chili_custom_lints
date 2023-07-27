@@ -11,7 +11,6 @@ PluginBase createPlugin() => _ChiliCustomLinter();
 class _ChiliCustomLinter extends PluginBase {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) => [
-        OmitFunctionParamsTypesRule(),
         RenameUnusedParamsToUnderscoreRule(),
         UseCommonDesignSystemMarginLintRule(),
         UseCommonDesignSystemPaddingLintRule(),

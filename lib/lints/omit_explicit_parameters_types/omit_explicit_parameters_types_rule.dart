@@ -4,7 +4,12 @@ import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
-// This lint should be overriden by this: https://dart.dev/tools/linter-rules/avoid_types_on_closure_parameters
+@Deprecated(
+  """
+  This lint should be overriden by this: 
+  https://dart.dev/tools/linter-rules/avoid_types_on_closure_parameters
+  """,
+)
 class OmitFunctionParamsTypesRule extends DartLintRule {
   OmitFunctionParamsTypesRule() : super(code: _code);
 

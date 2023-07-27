@@ -18,13 +18,14 @@ class WidgetNodeHandler {
   static bool hasLintError(
     double? horizontal,
     double? vertical,
-    NodeList<Expression> arguments,
+    bool hasArguments,
   ) {
+    if (!hasArguments) return true;
+
     final isHorizontalDivisibleBy4 = horizontal != null && horizontal % 4 == 0;
     final isVerticalDivisibleBy4 = vertical != null && vertical % 4 == 0;
-    final hasArguments = arguments.isNotEmpty;
 
-    return isHorizontalDivisibleBy4 || isVerticalDivisibleBy4 || !hasArguments;
+    return isHorizontalDivisibleBy4 || isVerticalDivisibleBy4;
   }
 
   static DirectionalSpacing getMarginArgumentValues(
@@ -68,17 +69,16 @@ class WidgetNodeHandler {
     required int valueStartPosition,
   }) {
     // For handling unnamed parameter value.
-    final allArguments = node.argumentList.arguments.toSet();
+    final allArguments = node.argumentList.arguments;
     final unnamedValue = double.tryParse(allArguments.firstOrNull.toString());
 
     if (allArguments.length == 1 && unnamedValue != null) {
       return unnamedValue;
     }
 
-    final argument = node.argumentList.arguments.toSet().firstWhereOrNull(
-          (arg) =>
-              arg is NamedExpression && arg.name.label.name == parameterName,
-        );
+    final argument = allArguments.firstWhereOrNull(
+      (arg) => arg is NamedExpression && arg.name.label.name == parameterName,
+    );
 
     if (argument == null) return null;
 
