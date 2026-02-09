@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -9,7 +9,8 @@ class PreferArrowSyntaxRule extends DartLintRule {
 
   static final _code = LintCode(
     name: 'prefer_arrow_syntax',
-    problemMessage: '⚠️ Warning: this lint is under construction and is experimental. ⚠️ Prefer arrow syntax for single line functions',
+    problemMessage:
+        '⚠️ Warning: this lint is under construction and is experimental. ⚠️ Prefer arrow syntax for single line functions',
     correctionMessage:
         'Replace with arrow syntax, e.g. from void foo() { return 1; } to void foo() => 1;',
   );
@@ -17,7 +18,7 @@ class PreferArrowSyntaxRule extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addFunctionDeclaration((node) {
@@ -31,14 +32,14 @@ class PreferArrowSyntaxRule extends DartLintRule {
 
   void _reportError({
     required FunctionBody body,
-    required ErrorReporter reporter,
+    required DiagnosticReporter reporter,
   }) {
     if (body is BlockFunctionBody && body.block.statements.length == 1) {
       final statement = body.block.statements.first;
-      reporter.reportErrorForOffset(
-        code,
-        statement.offset,
-        statement.length,
+      reporter.atOffset(
+        diagnosticCode: code,
+        offset: statement.offset,
+        length: statement.length,
       );
     }
   }
@@ -53,8 +54,8 @@ class _PreferArrowSyntaxFix extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    AnalysisError analysisError,
-    List<AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addFunctionDeclaration((node) {
       if (!analysisError.sourceRange.intersects(node.sourceRange)) {

@@ -1,15 +1,15 @@
 name: chili_custom_lints
 description: Chili custom lints
-version: 1.0.0
+version: 1.1.0
 
 environment:
   sdk: ^3.0.0
 
 dependencies:
-  analyzer: ^5.7.0 #TODO: update once `custom_lint_builder` is compatible with analyzer 6.0
-  analyzer_plugin: ^0.11.2
-  custom_lint_builder: ^0.5.0
+  analyzer: ^8.4.0
+  analyzer_plugin: ^0.13.0
+  custom_lint_builder: ^0.8.1
   collection: any
 
 dev_dependencies:
-  lints: ^2.0.0
+  lints: ^6.1.0

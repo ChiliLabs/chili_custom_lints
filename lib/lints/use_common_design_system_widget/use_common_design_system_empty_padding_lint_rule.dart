@@ -1,4 +1,5 @@
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/model/common_design_system_widget.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/node_handler/widget_node_handler.dart';
@@ -11,19 +12,23 @@ class UseCommonDesignSystemEmptyPaddingLintRule extends DartLintRule {
   static final _code = LintCode(
     name: CommonDesignSystemWidget.emptyPadding.errorCode,
     problemMessage: CommonDesignSystemWidget.emptyPadding.problemMessage,
-    errorSeverity: ErrorSeverity.WARNING,
+    errorSeverity: DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addIdentifier((node) {
       if (node.name != EdgeInsetsType.zero.name) return;
 
-      reporter.reportErrorForOffset(code, node.offset, node.length);
+      reporter.atOffset(
+        diagnosticCode: code,
+        offset: node.offset,
+        length: node.length,
+      );
     });
   }
 
@@ -37,8 +42,8 @@ class _UseCommonDesignSystemEmptyPaddingLintRuleFix extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    AnalysisError analysisError,
-    List<AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addIdentifier((node) {
       final isMatch = node.name == EdgeInsetsType.zero.name;

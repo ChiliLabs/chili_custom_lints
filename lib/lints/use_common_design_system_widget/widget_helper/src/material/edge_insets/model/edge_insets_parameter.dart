@@ -7,8 +7,6 @@ enum EdgeInsetsParameter {
       case EdgeInsetsParameter.horizontal:
       case EdgeInsetsParameter.vertical:
         return '$name: '.length;
-      default:
-        return 0;
     }
   }
 }
