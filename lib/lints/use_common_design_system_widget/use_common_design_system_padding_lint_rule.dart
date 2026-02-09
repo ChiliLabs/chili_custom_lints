@@ -1,4 +1,5 @@
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/model/common_design_system_widget.dart';
 import 'package:chili_custom_lints/lints/use_common_design_system_widget/node_handler/widget_node_handler.dart';
@@ -13,13 +14,13 @@ class UseCommonDesignSystemPaddingLintRule extends DartLintRule {
   static final _code = LintCode(
     name: CommonDesignSystemWidget.padding.errorCode,
     problemMessage: CommonDesignSystemWidget.padding.problemMessage,
-    errorSeverity: ErrorSeverity.WARNING,
+    errorSeverity: DiagnosticSeverity.WARNING,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -39,7 +40,11 @@ class UseCommonDesignSystemPaddingLintRule extends DartLintRule {
         return;
       }
 
-      reporter.reportErrorForOffset(code, node.offset, node.length);
+      reporter.atOffset(
+        diagnosticCode: code,
+        offset: node.offset,
+        length: node.length,
+      );
     });
   }
 
@@ -53,8 +58,8 @@ class _UseCommonDesignSystemPaddingLintRuleFix extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    AnalysisError analysisError,
-    List<AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final arguments = node.argumentList.arguments;

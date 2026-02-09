@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -23,7 +23,7 @@ class OmitFunctionParamsTypesRule extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addNamedExpression((node) {
@@ -33,7 +33,7 @@ class OmitFunctionParamsTypesRule extends DartLintRule {
         for (var param in params) {
           if (param is SimpleFormalParameter) {
             if (param.type != null) {
-              reporter.reportErrorForNode(_code, param);
+              reporter.atNode(param, _code);
             }
           }
         }
@@ -51,8 +51,8 @@ class _OmitFunctionParamsTypesFix extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    AnalysisError analysisError,
-    List<AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addNamedExpression((node) {
       if (!analysisError.sourceRange.intersects(node.sourceRange)) {

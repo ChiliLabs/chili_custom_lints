@@ -1,4 +1,4 @@
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:chili_custom_lints/lints/rename_unused_params_to_underscore/named_expression_parameter_usage_visitor.dart';
@@ -33,14 +33,14 @@ class RenameUnusedParamsToUnderscoreRule extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addNamedExpression((node) {
       node.expression.visitChildren(
         NamedExpressionParameterUsageVisitor(
           onVisit: (token, _) {
-            reporter.reportErrorForToken(_code, token);
+            reporter.atToken(token, _code);
           },
         ),
       );
@@ -57,8 +57,8 @@ class _RenameUnusedParamsToUnderscoreFix extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    AnalysisError analysisError,
-    List<AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     context.registry.addNamedExpression((node) {
       if (!analysisError.sourceRange.intersects(node.sourceRange)) {
